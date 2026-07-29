@@ -1,8 +1,8 @@
 # Underwater Object Detection with YOLOv9
 
-Fine-tuned **YOLOv9c** for marine object detection on the [URPC 2019](https://github.com/xiaoHaiSea/URPC2019) underwater dataset using Ultralytics.
+Fine-tuned **YOLOv9c** for marine object detection on the URPC 2019 underwater dataset using Ultralytics.
 
-**Kaggle notebook:** https://www.kaggle.com/code/salonichippa/underwater-yolo
+**Kaggle notebook:** https://www.kaggle.com/code/salonichippa/underwater-yolo-v2
 
 ## Results (test set)
 
@@ -59,7 +59,7 @@ Upload the output folder to [Kaggle Datasets](https://www.kaggle.com/datasets) a
 
 ### 2. Train on Kaggle
 
-1. Open the [Kaggle notebook](https://www.kaggle.com/code/salonichippa/underwater-yolo)
+1. Open the [Kaggle notebook](https://www.kaggle.com/code/salonichippa/underwater-yolo-v2)
 2. Attach dataset `urpc2019-640-15pct`
 3. Enable **GPU T4**, Internet **On**
 4. Run all cells
