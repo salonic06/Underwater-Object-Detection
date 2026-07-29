@@ -2,7 +2,8 @@
 
 Fine-tuned **YOLOv9c** for marine object detection on the URPC 2019 underwater dataset using Ultralytics.
 
-**Kaggle notebook:** https://www.kaggle.com/code/salonichippa/underwater-yolo-v2
+**Kaggle notebook:** https://www.kaggle.com/code/salonichippa/underwater-yolo-v2  
+**Executed run (with outputs):** see saved versions on the [Kaggle notebook](https://www.kaggle.com/code/salonichippa/underwater-yolo-v2) — metrics and plots are also in [`results/RESULTS.md`](results/RESULTS.md) and [`assets/`](assets/).
 
 ## Results (test set)
 
