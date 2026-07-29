@@ -1,0 +1,31 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Data (too large for GitHub)
+data/
+*.zip
+
+# Training outputs / weights
+outputs/
+runs/
+*.pt
+*.onnx
+
+# Jupyter checkpoints
+.ipynb_checkpoints/
+.virtual_documents/
+
+# OS / IDE
+.DS_Store
+.idea/
+Thumbs.db
+
+# Local scratch
+_nb_inspect.py
+_github_clone/
+
+# Kaggle working copies with embedded outputs (keep one clean notebook only)
+underwater-yolo-v2 (2).ipynb
