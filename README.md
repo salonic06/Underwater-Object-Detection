@@ -4,7 +4,7 @@ Fine-tuned **YOLOv9c** for marine object detection on the URPC 2019 underwater d
 
 **Kaggle notebook:** https://www.kaggle.com/code/salonichippa/underwater-yolo-v2  
 **Dataset (corrected labels):** https://www.kaggle.com/datasets/salonichippa/urpc2019-640-15pct-v2  
-**Live demo:** run locally with Gradio (`app.py`) — see deploy steps below for Hugging Face Spaces.
+**Live demo:** Streamlit Cloud (after deploy) — or run locally with `streamlit run streamlit_app.py` / `python app.py` (Gradio).
 
 ## Results (test set, corrected class IDs)
 
@@ -34,28 +34,48 @@ See [results/RESULTS.md](results/RESULTS.md) for full tables and label-fix notes
 
 - Built preprocessing pipeline (`prepare_urpc640.py`) — letterbox resize, **1→0 class-ID fix**, stratified sampling
 - Compared **YOLOv9c vs YOLO11s** on the same corrected subset (v9c **+8.1 pts** test mAP)
-- End-to-end workflow: preprocess locally → train on Kaggle GPU → evaluate → Gradio demo
+- End-to-end workflow: preprocess locally → train on Kaggle GPU → evaluate → Streamlit / Gradio demo
 
 ## Repository structure
 
 ```
-├── app.py                      # Gradio inference demo
+├── streamlit_app.py            # Streamlit Cloud demo (interviewer link)
+├── app.py                      # Local Gradio demo
 ├── prepare_urpc640.py          # Create 640×640 YOLO dataset from URPC 2019
+├── packages.txt                # System libs for Streamlit Cloud
+├── requirements-streamlit.txt  # Cloud / Streamlit deps
 ├── notebooks/
-│   └── underwater-yolo-v2.ipynb  # Training and evaluation notebook
-├── examples/                   # Sample images for the demo
+│   └── underwater-yolo-v2.ipynb
+├── examples/
 ├── results/
-│   └── RESULTS.md              # Full metrics tables
-├── assets/                     # Training plots (Phase C / corrected labels)
-└── weights/                    # Place best.pt here locally (gitignored)
+├── assets/
+└── weights/                    # best.pt locally (gitignored); Cloud downloads from Release
 ```
 
 ## Quick start
 
-### 0. Live demo (Gradio)
+### 0. Live demo (Streamlit — recommended for interviews)
+
+**Local**
 
 ```bash
-# weights/yolov9c_urpc640_15pct_best.pt  (from Kaggle Save Version; gitignored)
+pip install -r requirements-streamlit.txt
+# weights/yolov9c_urpc640_15pct_best.pt must exist, OR set WEIGHTS_URL
+streamlit run streamlit_app.py
+```
+
+**Streamlit Community Cloud**
+
+1. Create a GitHub **Release** tag `v1.0` and upload `yolov9c_urpc640_15pct_best.pt`
+2. Push this repo to GitHub
+3. Go to [share.streamlit.io](https://share.streamlit.io) → **New app**
+4. Repo: `salonic06/Underwater-Object-Detection` · Branch: `main` · Main file: `streamlit_app.py`
+5. Advanced → Python requirements file: `requirements-streamlit.txt`
+6. Deploy → open the `*.streamlit.app` URL (warm it once before interviews)
+
+### 0b. Local Gradio
+
+```bash
 pip install -r requirements-deploy.txt
 python app.py
 ```
