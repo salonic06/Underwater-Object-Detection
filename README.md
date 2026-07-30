@@ -4,7 +4,7 @@ Fine-tuned **YOLOv9c** for marine object detection on the URPC 2019 underwater d
 
 **Kaggle notebook:** https://www.kaggle.com/code/salonichippa/underwater-yolo-v2  
 **Dataset (corrected labels):** https://www.kaggle.com/datasets/salonichippa/urpc2019-640-15pct-v2  
-**Live demo:** Streamlit Cloud (after deploy) — or run locally with `streamlit run streamlit_app.py` / `python app.py` (Gradio).
+**Live demo:** https://underwater-object-detection-eapgyfnouswmdqlmxpuc3x.streamlit.app/
 
 ## Results (test set, corrected class IDs)
 
@@ -57,6 +57,9 @@ See [results/RESULTS.md](results/RESULTS.md) for full tables and label-fix notes
 
 ### 0. Live demo (Streamlit — recommended for interviews)
 
+**Hosted:** https://underwater-object-detection-eapgyfnouswmdqlmxpuc3x.streamlit.app/  
+(Warm the URL once before interviews — first load can be slow while weights download.)
+
 **Local**
 
 ```bash
@@ -64,15 +67,6 @@ pip install -r requirements.txt
 # weights/yolov9c_urpc640_15pct_best.pt (or *_v2.pt) must exist, OR set WEIGHTS_URL
 streamlit run streamlit_app.py
 ```
-
-**Streamlit Community Cloud**
-
-1. GitHub **Release** `v1.0` with `yolov9c_urpc640_15pct_best_v2.pt` (already done)
-2. Push this repo to GitHub
-3. Go to [share.streamlit.io](https://share.streamlit.io) → **New app**
-4. Repo: `salonic06/Underwater-Object-Detection` · Branch: `main` · Main file: `streamlit_app.py`
-5. Deploy (Cloud auto-reads root `requirements.txt` + `packages.txt` — no Advanced settings)
-6. Open the `*.streamlit.app` URL (warm it once before interviews)
 
 ### 0b. Local Gradio
 
