@@ -3,19 +3,22 @@
 Fine-tuned **YOLOv9c** for marine object detection on the URPC 2019 underwater dataset using Ultralytics.
 
 **Kaggle notebook:** https://www.kaggle.com/code/salonichippa/underwater-yolo-v2  
-**Executed run (with outputs):** see saved versions on the [Kaggle notebook](https://www.kaggle.com/code/salonichippa/underwater-yolo-v2) — metrics and plots are also in [`results/RESULTS.md`](results/RESULTS.md) and [`assets/`](assets/).
+**Dataset (corrected labels):** https://www.kaggle.com/datasets/salonichippa/urpc2019-640-15pct-v2  
+**Live demo:** run locally with Gradio (`app.py`) — see deploy steps below for Hugging Face Spaces.
 
-## Results (test set)
+## Results (test set, corrected class IDs)
 
 | Model | mAP@0.5 | mAP@0.5:0.95 | Precision | Recall |
 |-------|---------|--------------|-----------|----------|
-| **YOLOv9c** | **71.95%** | 38.30% | 77.43% | 62.39% |
-| YOLO11s (baseline) | 66.71% | 35.58% | 73.00% | 60.88% |
+| **YOLOv9c** | **71.67%** | 39.18% | 71.50% | 71.51% |
+| YOLO11s (baseline) | 63.57% | 32.23% | 71.59% | 56.62% |
 
-**Dataset:** 15% stratified subset of URPC 2019 — 508 train / 141 val / 56 test images at 640×640  
+**Per-class (YOLOv9c mAP@0.5):** echinus 80.1% · starfish 88.5% · holothurian 60.9% · scallop 57.2%
+
+**Dataset:** 15% stratified subset of URPC 2019 at 640×640 (Kaggle: `urpc2019-640-15pct-v2`)  
 **Classes:** echinus, starfish, holothurian, scallop, waterweeds
 
-See [results/RESULTS.md](results/RESULTS.md) for per-class breakdown and experiment history.
+See [results/RESULTS.md](results/RESULTS.md) for full tables and label-fix notes.
 
 ### Visualizations
 
@@ -27,45 +30,53 @@ See [results/RESULTS.md](results/RESULTS.md) for per-class breakdown and experim
 |---|
 | ![Confusion matrix](assets/confusion_matrix_normalized.png) |
 
-Detection batch grids were omitted — raw validation overlays are cluttered due to dense underwater scenes and low-confidence waterweeds detections. Metric plots better represent model performance.
-
 ## Project highlights
 
-- Built preprocessing pipeline (`prepare_urpc640.py`) — letterbox resize, label validation, stratified sampling
-- Compared **YOLOv9c vs YOLO11s** on the same subset (v9c +5.2% test mAP)
-- Scaled from 5% to 15% data: **+9.2 pts** test mAP improvement
-- End-to-end workflow: preprocess locally → train on Kaggle GPU → evaluate → visualize predictions
+- Built preprocessing pipeline (`prepare_urpc640.py`) — letterbox resize, **1→0 class-ID fix**, stratified sampling
+- Compared **YOLOv9c vs YOLO11s** on the same corrected subset (v9c **+8.1 pts** test mAP)
+- End-to-end workflow: preprocess locally → train on Kaggle GPU → evaluate → Gradio demo
 
 ## Repository structure
 
 ```
+├── app.py                      # Gradio inference demo
 ├── prepare_urpc640.py          # Create 640×640 YOLO dataset from URPC 2019
 ├── notebooks/
 │   └── underwater-yolo-v2.ipynb  # Training and evaluation notebook
+├── examples/                   # Sample images for the demo
 ├── results/
 │   └── RESULTS.md              # Full metrics tables
-└── assets/                     # Training plots and validation batch visuals
+├── assets/                     # Training plots (Phase C / corrected labels)
+└── weights/                    # Place best.pt here locally (gitignored)
 ```
 
 ## Quick start
+
+### 0. Live demo (Gradio)
+
+```bash
+# weights/yolov9c_urpc640_15pct_best.pt  (from Kaggle Save Version; gitignored)
+pip install -r requirements-deploy.txt
+python app.py
+```
+
+Open `http://127.0.0.1:7860`. Default confidence **0.50**.
 
 ### 1. Preprocess dataset (local)
 
 ```bash
 pip install -r requirements-preprocess.txt
-python prepare_urpc640.py --fraction 0.15 --output ./data/urpc2019-640-15pct --clean
+python prepare_urpc640.py --fraction 0.15 --output ./data/urpc2019-640-15pct-v2 --clean
 ```
 
-Upload the output folder to [Kaggle Datasets](https://www.kaggle.com/datasets) as `urpc2019-640-15pct`.
+Upload to Kaggle as `urpc2019-640-15pct-v2`.
 
 ### 2. Train on Kaggle
 
 1. Open the [Kaggle notebook](https://www.kaggle.com/code/salonichippa/underwater-yolo-v2)
-2. Attach dataset `urpc2019-640-15pct`
+2. Attach dataset **`urpc2019-640-15pct-v2`**
 3. Enable **GPU T4**, Internet **On**
-4. Run all cells
-
-Or upload `notebooks/underwater-yolo-v2.ipynb` to your own Kaggle notebook.
+4. Confirm class counts show **echinus > 0**, then Run all
 
 ## Method
 
@@ -80,7 +91,7 @@ Or upload `notebooks/underwater-yolo-v2.ipynb` to your own Kaggle notebook.
 ## Limitations
 
 - Trained on 15% of URPC 2019 (~705 images), not the full benchmark
-- Scallop detection remains challenging due to class imbalance
+- Scallop / holothurian remain harder; waterweeds rare in this split
 - Not SOTA vs papers using full URPC + custom architectures (~81%+ mAP)
 
 ## References

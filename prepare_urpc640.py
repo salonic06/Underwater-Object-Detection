@@ -80,8 +80,12 @@ def transform_labels(
             skipped += 1
             continue
 
+        # URPC source labels are 1-indexed: 1=echinus ... 5=waterweeds.
+        # YOLO / Ultralytics require 0-indexed IDs matching CLASSES above.
         cls_id = int(float(parts[0]))
-        if cls_id < 0 or cls_id >= NUM_CLASSES:
+        if 1 <= cls_id <= NUM_CLASSES:
+            cls_id -= 1
+        else:
             skipped += 1
             continue
 
@@ -284,11 +288,21 @@ def main() -> None:
         )
 
     print("\nClass names:", CLASSES)
-    print(f"data.yaml written to: {args.output / 'data.yaml'}")
+    # Aggregate class counts across splits (sanity: echinus must be non-zero)
+    total_cls: Counter = Counter()
+    for row in stats:
+        total_cls.update(row.get("class_counts", {}))
+    print("Class instance counts (all splits):")
+    for i, name in enumerate(CLASSES):
+        print(f"  {i} {name:<12} {total_cls.get(i, 0)}")
+    if total_cls.get(0, 0) == 0:
+        print("WARNING: echinus count is 0 — check that source labels are 1-indexed URPC.")
+    print(f"\ndata.yaml written to: {args.output / 'data.yaml'}")
     print("\nNext steps:")
-    print("  1. Zip the output folder and upload to Kaggle as a dataset (name: urpc2019-640)")
-    print("  2. Open underwater-yolo-v2.ipynb on Kaggle, attach the dataset, enable GPU")
-    print("  3. Run smoke test (CPU) first, then full training (GPU)")
+    print("  1. Zip the output folder and upload to Kaggle as dataset urpc2019-640-15pct-v2")
+    print("  2. Open underwater-yolo-v2 on Kaggle, attach the NEW dataset, enable GPU")
+    print("  3. Confirm class counts show echinus > 0, then full training")
+    print("  4. Save Version and download yolov9c_urpc640_15pct_best.pt")
 
 
 if __name__ == "__main__":

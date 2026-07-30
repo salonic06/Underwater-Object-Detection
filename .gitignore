@@ -8,9 +8,11 @@ venv/
 data/
 *.zip
 
-# Training outputs / weights
+# Training outputs / weights (keep weights/.gitkeep; never commit .pt)
 outputs/
 runs/
+weights/*
+!weights/.gitkeep
 *.pt
 *.onnx
 
