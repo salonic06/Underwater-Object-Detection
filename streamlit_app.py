@@ -25,7 +25,7 @@ os.environ.setdefault("YOLO_CONFIG_DIR", "/tmp/Ultralytics")
 CLASSES = ["echinus", "starfish", "holothurian", "scallop", "waterweeds"]
 DEFAULT_CONF = 0.50
 IMGSZ = 640
-WEIGHT_NAME = "yolov9c_urpc640_15pct_best.pt"
+WEIGHT_NAME = "yolov9c_urpc640_15pct_best_v2.pt"
 
 # Create a GitHub Release named v1.0 and attach the .pt file (see README).
 DEFAULT_WEIGHTS_URL = (
@@ -36,6 +36,11 @@ DEFAULT_WEIGHTS_URL = (
 ROOT = Path(__file__).resolve().parent
 WEIGHTS_DIR = ROOT / "weights"
 LOCAL_WEIGHTS = WEIGHTS_DIR / WEIGHT_NAME
+# Also accept the local Gradio filename if present
+LOCAL_WEIGHTS_ALIASES = [
+    LOCAL_WEIGHTS,
+    WEIGHTS_DIR / "yolov9c_urpc640_15pct_best.pt",
+]
 
 
 def _weights_url() -> str:
@@ -44,8 +49,9 @@ def _weights_url() -> str:
 
 def ensure_weights() -> Path:
     """Return path to weights file, downloading from GitHub Release if needed."""
-    if LOCAL_WEIGHTS.is_file() and LOCAL_WEIGHTS.stat().st_size > 1_000_000:
-        return LOCAL_WEIGHTS
+    for path in LOCAL_WEIGHTS_ALIASES:
+        if path.is_file() and path.stat().st_size > 1_000_000:
+            return path
 
     # Streamlit Cloud: download into /tmp (writable)
     cache = Path(os.environ.get("WEIGHTS_CACHE", "/tmp")) / WEIGHT_NAME
