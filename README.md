@@ -43,7 +43,8 @@ See [results/RESULTS.md](results/RESULTS.md) for full tables and label-fix notes
 ├── app.py                      # Local Gradio demo
 ├── prepare_urpc640.py          # Create 640×640 YOLO dataset from URPC 2019
 ├── packages.txt                # System libs for Streamlit Cloud
-├── requirements-streamlit.txt  # Cloud / Streamlit deps
+├── requirements.txt            # Used by Streamlit Cloud automatically
+├── requirements-streamlit.txt  # Same deps (optional local alias)
 ├── notebooks/
 │   └── underwater-yolo-v2.ipynb
 ├── examples/
@@ -59,19 +60,19 @@ See [results/RESULTS.md](results/RESULTS.md) for full tables and label-fix notes
 **Local**
 
 ```bash
-pip install -r requirements-streamlit.txt
-# weights/yolov9c_urpc640_15pct_best.pt must exist, OR set WEIGHTS_URL
+pip install -r requirements.txt
+# weights/yolov9c_urpc640_15pct_best.pt (or *_v2.pt) must exist, OR set WEIGHTS_URL
 streamlit run streamlit_app.py
 ```
 
 **Streamlit Community Cloud**
 
-1. Create a GitHub **Release** tag `v1.0` and upload `yolov9c_urpc640_15pct_best.pt`
+1. GitHub **Release** `v1.0` with `yolov9c_urpc640_15pct_best_v2.pt` (already done)
 2. Push this repo to GitHub
 3. Go to [share.streamlit.io](https://share.streamlit.io) → **New app**
 4. Repo: `salonic06/Underwater-Object-Detection` · Branch: `main` · Main file: `streamlit_app.py`
-5. Advanced → Python requirements file: `requirements-streamlit.txt`
-6. Deploy → open the `*.streamlit.app` URL (warm it once before interviews)
+5. Deploy (Cloud auto-reads root `requirements.txt` + `packages.txt` — no Advanced settings)
+6. Open the `*.streamlit.app` URL (warm it once before interviews)
 
 ### 0b. Local Gradio
 
